@@ -65,6 +65,21 @@ function Detail(){
     return $stmt;
 }
 
+function Login(){
+  
+    // select all query
+    $query = " SELECT * FROM `customer` WHERE Email = '" . $this->Email . "', Password = '" . $this->Password . "' ";
+  
+    // prepare query statement
+    $stmt = $this->conn->prepare($query);
+  
+    // execute query
+    $stmt->execute();
+  
+    return $stmt;
+}
+
+
 // create product
 function create(){
   
