@@ -13,49 +13,32 @@ $db = $database->getConnection();
   
 // initialize object
 $product = new Product($db);
+
+// set Email property of record to read
+$product->Email = isset($_GET['Email']) ? $_GET['Email'] : die();
+
+// set Password property of record to read
+$product->Password = isset($_GET['Password']) ? $_GET['Password'] : die();
   
 // query products
-$stmt = $product->read();
+$stmt = $product->login();
 $num = $stmt->rowCount();
   
 // check if more than 0 record found
 if($num>0){
-  
-    // products array
-    $products_arr=array();
-    $products_arr["records"]=array();
-  
-    // retrieve our table contents
-    // fetch() is faster than fetchAll()
-    // http://stackoverflow.com/questions/2770630/pdofetchall-vs-pdofetch-in-a-loop
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-        // extract row
-        // this will make $row['name'] to
-        // just $name only
-        extract($row);
-  
-        $product_item=array(
-            "Product_id" => $Product_id,
-            "Product_name" => $Product_name,
-            "Author_name" => $Author_name,
-            "Publi_name" => $Publi_name,
-            "Detail" => $Detail,
-            "Image" => $Image,
-            "Total" => $Total,
-            "Price" => $Price,
-            "Order_Num" => $Order_Num,
-            "Category_ID" => $Category_ID,
-            "Promotion_id" => $Promotion_id
-        );
-  
-        array_push($products_arr["records"], $product_item);
-    }
-  
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    extract($row);
+
     // set response code - 200 OK
     http_response_code(200);
   
     // show products data in json format
-    echo json_encode($products_arr);
+    echo json_encode(
+        array("Email" => $Email,
+              "Status" => true
+        )
+    );
 }
   
 else{
@@ -65,6 +48,8 @@ else{
   
     // tell the user no products found
     echo json_encode(
-        array("message" => "No products found.")
+        array("Email" => "No products found.",
+              "Status" => false
+        )
     );
 }

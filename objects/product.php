@@ -68,7 +68,7 @@ function Detail(){
 function Login(){
   
     // select all query
-    $query = " SELECT * FROM `customer` WHERE Email = '" . $this->Email . "', Password = '" . $this->Password . "' ";
+    $query = " SELECT Email = '" . $this->Email . "' Password = '" . $this->Password . "'  FROM `customer` ";
   
     // prepare query statement
     $stmt = $this->conn->prepare($query);
