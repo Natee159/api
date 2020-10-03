@@ -23,33 +23,27 @@ $data = json_decode(file_get_contents("php://input"));
 // make sure data is not empty
 if (
    
-    !empty($data->Product_name) &&
-    !empty($data->Author_name) &&
-    !empty($data->Publi_name) &&
-    !empty($data->Detail) &&
-    !empty($data->Image) &&
+    !empty($data->Date) &&
+    !empty($data->Time) &&
     !empty($data->Total) &&
-    !empty($data->Price) &&
-    !empty($data->Category_ID) &&
-    !empty($data->Promotion_id)
-    
+    !empty($data->Amount) &&
+    !empty($data->Shipment) &&
+    !empty($data->Status) &&
+    !empty($data->Customer_id) 
 ) {
 
     // set product property values
    
-    $product->Product_name = $data->Product_name;
-    $product->Author_name = $data->Author_name;
-    $product->Publi_name = $data->Publi_name;
-    $product->Detail = $data->Detail;
-    $product->Image = $data->Image;
+    $product->Date = $data->Date;
+    $product->Time = $data->Time;
     $product->Total = $data->Total;
-    $product->Price = $data->Price;
-    $product->Category_ID = $data->Category_ID;
-    $product->Promotion_id = $data->Promotion_id;
+    $product->Amount = $data->Amount;
+    $product->Shipment = $data->Shipment;
+    $product->Status = $data->Status;
+    $product->Customer_id = $data->Customer_id;    
     
-
     // create the product
-    if ($product->create()) {
+    if ($product->insertorder()) {
 
         // set response code - 201 created
         http_response_code(201);

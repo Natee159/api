@@ -7,7 +7,7 @@ class Product{
   
     // object properties
     
-    // public $Product_id;
+    public $Product_id;
     public $Product_name;
     public $Author_name;
     public $Publi_name;
@@ -15,7 +15,6 @@ class Product{
     public $Image;
     public $Total;
     public $Price;
-    public $Order_Num;
     public $Category_ID;
     public $Promotion_id;
 
@@ -38,6 +37,87 @@ function read(){
   
     return $stmt;
 }
+function readorder(){
+  
+    // select all query
+    $query = " SELECT * FROM `order` ";
+
+    // prepare query statement
+    $stmt = $this->conn->prepare($query);
+  
+    // execute query
+    $stmt->execute();
+  
+    return $stmt;
+}
+function readcategory(){
+  
+    // select all query
+    $query = " SELECT * FROM `category` ";
+
+    // prepare query statement
+    $stmt = $this->conn->prepare($query);
+  
+    // execute query
+    $stmt->execute();
+  
+    return $stmt;
+}
+function readcomment(){
+  
+    // select all query
+    $query = " SELECT * FROM `comment` ";
+
+    // prepare query statement
+    $stmt = $this->conn->prepare($query);
+  
+    // execute query
+    $stmt->execute();
+  
+    return $stmt;
+}
+function readcustomer(){
+  
+    // select all query
+    $query = " SELECT * FROM `customer` ";
+
+    // prepare query statement
+    $stmt = $this->conn->prepare($query);
+  
+    // execute query
+    $stmt->execute();
+  
+    return $stmt;
+}
+
+function readpromotion(){
+  
+    // select all query
+    $query = " SELECT * FROM `promotion` ";
+
+    // prepare query statement
+    $stmt = $this->conn->prepare($query);
+  
+    // execute query
+    $stmt->execute();
+  
+    return $stmt;
+}
+
+function readtype(){
+  
+    // select all query
+    $query = " SELECT * FROM `type` ";
+
+    // prepare query statement
+    $stmt = $this->conn->prepare($query);
+  
+    // execute query
+    $stmt->execute();
+  
+    return $stmt;
+}
+
 function show(){
   
     // select all query
@@ -54,7 +134,7 @@ function show(){
 function Detail(){
   
     // select all query
-    $query = " SELECT * FROM `product` WHERE Product_iD = '" . $this->Product_id . "' ";
+    $query = " SELECT * FROM `product` WHERE Product_id = '" . $this->Product_id . "' ";
   
     // prepare query statement
     $stmt = $this->conn->prepare($query);
@@ -65,10 +145,10 @@ function Detail(){
     return $stmt;
 }
 
-function Login(){
+function login(){
   
-    // select all query
-    $query = " SELECT Email = '" . $this->Email . "' Password = '" . $this->Password . "'  FROM `customer` ";
+    // select one query
+    $query = " SELECT * FROM `customer` WHERE Email = '" . $this->Email . "' AND Password = '" . $this->Password . "' ";
   
     // prepare query statement
     $stmt = $this->conn->prepare($query);
@@ -87,7 +167,7 @@ function create(){
     $query = "INSERT INTO
                 `product`
             SET
-            Product_name=:Product_name, Author_name=:Author_name, Publi_name=:Publi_name, Detail=:Detail, Image=:Image,Total=:Total,Price=:Price,Order_Num=:Order_Num,Category_ID=:Category_ID,Promotion_id=:Promotion_id";
+            Product_name=:Product_name, Author_name=:Author_name, Publi_name=:Publi_name, Detail=:Detail, Image=:Image,Total=:Total,Price=:Price,Category_ID=:Category_ID,Promotion_id=:Promotion_id";
   
     // prepare query
     $stmt = $this->conn->prepare($query);
@@ -101,7 +181,6 @@ function create(){
     $this->Image=htmlspecialchars(strip_tags($this->Image));
     $this->Total=htmlspecialchars(strip_tags($this->Total));
     $this->Price=htmlspecialchars(strip_tags($this->Price));
-    $this->Order_Num=htmlspecialchars(strip_tags($this->Order_Num));
     $this->Category_ID=htmlspecialchars(strip_tags($this->Category_ID));
     $this->Promotion_id=htmlspecialchars(strip_tags($this->Promotion_id));
     
@@ -115,10 +194,210 @@ function create(){
     $stmt->bindParam(":Image", $this->Image);
     $stmt->bindParam(":Total", $this->Total);
     $stmt->bindParam(":Price", $this->Price);
-    $stmt->bindParam(":Order_Num", $this->Order_Num);
     $stmt->bindParam(":Category_ID", $this->Category_ID);
     $stmt->bindParam(":Promotion_id", $this->Promotion_id);
     
+    
+  
+    // execute query
+    if($stmt->execute()){
+        return true;
+    }
+  
+    return false; 
+}
+function insertorder(){
+  
+    // query to insert record
+    $query = "INSERT INTO
+                `order`
+            SET
+            Date=:Date, Time=:Time, Total=:Total, Amount=:Amount, Shipment=:Shipment,Status=:Status";
+  
+    // prepare query
+    $stmt = $this->conn->prepare($query);
+  
+    // sanitize
+    // $this->Product_id=htmlspecialchars(strip_tags($this->Product_id));
+    $this->Date=htmlspecialchars(strip_tags($this->Date));
+    $this->Time=htmlspecialchars(strip_tags($this->Time));
+    $this->Total=htmlspecialchars(strip_tags($this->Total));
+    $this->Amount=htmlspecialchars(strip_tags($this->Amount));
+    $this->Shipment=htmlspecialchars(strip_tags($this->Shipment));
+    $this->Status=htmlspecialchars(strip_tags($this->Status));  
+  
+    // bind values
+    // $stmt->bindParam(":Product_id", $this->Product_id);
+    $stmt->bindParam(":Date", $this->Date);
+    $stmt->bindParam(":Time", $this->Time);
+    $stmt->bindParam(":Total", $this->Total);
+    $stmt->bindParam(":Amount", $this->Amount);
+    $stmt->bindParam(":Shipment", $this->Shipment);
+    $stmt->bindParam(":Status", $this->Status);
+    
+  
+    // execute query
+    if($stmt->execute()){
+        return true;
+    }
+  
+    return false; 
+}
+
+function insertcategory(){
+  
+    // query to insert record
+    $query = "INSERT INTO
+                `category`
+            SET
+            Category_Name=:Category_Name,Type_ID=:Type_ID";
+  
+    // prepare query
+    $stmt = $this->conn->prepare($query);
+  
+    // sanitize
+    // $this->Product_id=htmlspecialchars(strip_tags($this->Product_id));
+    $this->Category_Name=htmlspecialchars(strip_tags($this->Category_Name));
+    $this->Type_ID=htmlspecialchars(strip_tags($this->Type_ID));
+  
+    // bind values
+    // $stmt->bindParam(":Product_id", $this->Product_id);
+    $stmt->bindParam(":Category_Name", $this->Category_Name);    
+    $stmt->bindParam(":Type_ID", $this->Type_ID); 
+    // execute query
+    if($stmt->execute()){
+        return true;
+    }
+  
+    return false; 
+}
+
+function insertcomment(){
+  
+    // query to insert record
+    $query = "INSERT INTO
+                `comment`
+            SET
+            Score=:Score, Date=:Date, Comment=:Comment, Customer_id=:Customer_id, Product_id=:Product_id";
+  
+    // prepare query
+    $stmt = $this->conn->prepare($query);
+  
+    // sanitize
+    // $this->Product_id=htmlspecialchars(strip_tags($this->Product_id));
+    $this->Score=htmlspecialchars(strip_tags($this->Score));
+    $this->Date=htmlspecialchars(strip_tags($this->Date));
+    $this->Comment=htmlspecialchars(strip_tags($this->Comment));
+    $this->Customer_id=htmlspecialchars(strip_tags($this->Customer_id));
+    $this->Product_id=htmlspecialchars(strip_tags($this->Product_id)); 
+  
+    // bind values
+    // $stmt->bindParam(":Product_id", $this->Product_id);
+    $stmt->bindParam(":Score", $this->Score);
+    $stmt->bindParam(":Date", $this->Date);
+    $stmt->bindParam(":Comment", $this->Comment);
+    $stmt->bindParam(":Customer_id", $this->Customer_id);
+    $stmt->bindParam(":Product_id", $this->Product_id);
+    
+  
+    // execute query
+    if($stmt->execute()){
+        return true;
+    }
+  
+    return false; 
+}
+
+function insertpromotion(){
+  
+    // query to insert record
+    $query = "INSERT INTO
+                `promotion`
+            SET
+            Promotion_Name=:Promotion_Name, Percent=:Percent, StartDate=:StartDate, EndDate=:EndDate";
+  
+    // prepare query
+    $stmt = $this->conn->prepare($query);
+  
+    // sanitize
+    // $this->Product_id=htmlspecialchars(strip_tags($this->Product_id));
+    $this->Promotion_Name=htmlspecialchars(strip_tags($this->Promotion_Name));
+    $this->Percent=htmlspecialchars(strip_tags($this->Percent));
+    $this->StartDate=htmlspecialchars(strip_tags($this->StartDate));
+    $this->EndDate=htmlspecialchars(strip_tags($this->EndDate));
+  
+ 
+    // bind values
+    // $stmt->bindParam(":Product_id", $this->Product_id);
+    $stmt->bindParam(":Promotion_Name", $this->Promotion_Name);
+    $stmt->bindParam(":Percent", $this->Percent);
+    $stmt->bindParam(":StartDate", $this->StartDate);
+    $stmt->bindParam(":EndDate", $this->EndDate);
+
+    
+  
+    // execute query
+    if($stmt->execute()){
+        return true;
+    }
+  
+    return false; 
+}
+
+function insertpurchase(){
+  
+    // query to insert record
+    $query = "INSERT INTO
+                `purchase`
+            SET
+            Product_id=:Product_id, Order_Num=:Order_Num";
+  
+    // prepare query
+    $stmt = $this->conn->prepare($query);
+  
+    // sanitize
+    // $this->Product_id=htmlspecialchars(strip_tags($this->Product_id));
+    $this->Product_id=htmlspecialchars(strip_tags($this->Product_id));
+    $this->Order_Num=htmlspecialchars(strip_tags($this->Order_Num));
+  
+ 
+    // bind values
+    // $stmt->bindParam(":Product_id", $this->Product_id);
+    $stmt->bindParam(":Product_id", $this->Product_id);
+    $stmt->bindParam(":Order_Num", $this->Order_Num);
+
+
+    
+  
+    // execute query
+    if($stmt->execute()){
+        return true;
+    }
+  
+    return false; 
+}
+
+function inserttype(){
+  
+    // query to insert record
+    $query = "INSERT INTO
+                `type`
+            SET
+            Type_Name=:Type_Name";
+  
+    // prepare query
+    $stmt = $this->conn->prepare($query);
+  
+    // sanitize
+    // $this->Product_id=htmlspecialchars(strip_tags($this->Product_id));
+    $this->Type_Name=htmlspecialchars(strip_tags($this->Type_Name));
+  
+ 
+    // bind values
+    // $stmt->bindParam(":Product_id", $this->Product_id);
+    $stmt->bindParam(":Type_Name", $this->Type_Name);
+
+
     
   
     // execute query
@@ -193,6 +472,116 @@ function delete(){
     return false;
 }
 
+function deleteorder(){
+  
+    // delete query
+    $query = "DELETE FROM `order` WHERE Order_Num = ?";
+  
+    // prepare query
+    $stmt = $this->conn->prepare($query);
+  
+    // sanitize
+    $this->Order_Num=htmlspecialchars(strip_tags($this->Order_Num));
+  
+    // bind id of record to delete
+    $stmt->bindParam(1, $this->Order_Num);
+  
+    // execute query
+    if($stmt->execute()){
+        return true;
+    }
+  
+    return false;
+}
+
+function deletecategory(){
+  
+    // delete query
+    $query = "DELETE FROM `category` WHERE Category_ID = ?";
+  
+    // prepare query
+    $stmt = $this->conn->prepare($query);
+  
+    // sanitize
+    $this->Category_ID=htmlspecialchars(strip_tags($this->Category_ID));
+  
+    // bind id of record to delete
+    $stmt->bindParam(1, $this->Category_ID);
+  
+    // execute query
+    if($stmt->execute()){
+        return true;
+    }
+  
+    return false;
+}
+
+function deletecomment(){
+  
+    // delete query
+    $query = "DELETE FROM `comment` WHERE Comment_ID = ?";
+  
+    // prepare query
+    $stmt = $this->conn->prepare($query);
+  
+    // sanitize
+    $this->Comment_ID=htmlspecialchars(strip_tags($this->Comment_ID));
+  
+    // bind id of record to delete
+    $stmt->bindParam(1, $this->Comment_ID);
+  
+    // execute query
+    if($stmt->execute()){
+        return true;
+    }
+  
+    return false;
+}
+
+function deletepromotion(){
+  
+    // delete query
+    $query = "DELETE FROM `promotion` WHERE Promotion_id  = ?";
+  
+    // prepare query
+    $stmt = $this->conn->prepare($query);
+  
+    // sanitize
+    $this->Promotion_id =htmlspecialchars(strip_tags($this->Promotion_id));
+  
+    // bind id of record to delete
+    $stmt->bindParam(1, $this->Promotion_id);
+  
+    // execute query
+    if($stmt->execute()){
+        return true;
+    }
+  
+    return false;
+}
+
+function deletetype(){
+  
+    // delete query
+    $query = "DELETE FROM `type` WHERE Type_ID  = ?";
+  
+    // prepare query
+    $stmt = $this->conn->prepare($query);
+  
+    // sanitize
+    $this->Type_ID =htmlspecialchars(strip_tags($this->Type_ID));
+  
+    // bind id of record to delete
+    $stmt->bindParam(1, $this->Type_ID);
+  
+    // execute query
+    if($stmt->execute()){
+        return true;
+    }
+  
+    return false;
+}
+
 // update the product
 function update(){
   
@@ -207,7 +596,6 @@ function update(){
                 Image = :Image,
                 Total = :Total,
                 Price = :Price,
-                Order_Num = :Order_Num,
                 Category_ID = :Category_ID,
                 Promotion_id = :Promotion_id
             WHERE
@@ -224,7 +612,6 @@ function update(){
     $this->Image=htmlspecialchars(strip_tags($this->Image));
     $this->Total=htmlspecialchars(strip_tags($this->Total));
     $this->Price=htmlspecialchars(strip_tags($this->Price));
-    $this->Order_Num=htmlspecialchars(strip_tags($this->Order_Num));
     $this->Category_ID=htmlspecialchars(strip_tags($this->Category_ID));
     $this->Promotion_id=htmlspecialchars(strip_tags($this->Promotion_id));
 
@@ -238,7 +625,6 @@ function update(){
     $stmt->bindParam(':Image', $this->Image);
     $stmt->bindParam(':Total', $this->Total);
     $stmt->bindParam(':Price', $this->Price);
-    $stmt->bindParam(':Order_Num', $this->Order_Num);
     $stmt->bindParam(':Category_ID', $this->Category_ID);
     $stmt->bindParam(':Promotion_id', $this->Promotion_id);
 

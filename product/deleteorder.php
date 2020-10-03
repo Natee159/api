@@ -6,7 +6,7 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
   
-// include database and object files
+// include database and object file
 include_once '../config/database.php';
 include_once '../objects/product.php';
   
@@ -17,40 +17,30 @@ $db = $database->getConnection();
 // prepare product object
 $product = new Product($db);
   
-// get id of product to be edited
+// get product id
 $data = json_decode(file_get_contents("php://input"));
   
-// set ID property of product to be edited
-$product->Product_id = $data->Product_id;
+// set product id to be deleted
+$product->Order_Num = $data->Order_Num;
+echo $product->Order_Num;
   
-// set product property values
-$product->Product_name = $data->Product_name;
-$product->Author_name = $data->Author_name;
-$product->Publi_name = $data->Publi_name;
-$product->Detail = $data->Detail;
-$product->Image = $data->Image;
-$product->Total = $data->Total;
-$product->Price = $data->Price;
-$product->Category_ID = $data->Category_ID;
-$product->Promotion_id = $data->Promotion_id;
-  
-// update the product
-if($product->update()){
+// delete the product
+if($product->deleteorder()){
   
     // set response code - 200 ok
     http_response_code(200);
   
     // tell the user
-    echo json_encode(array("message" => "Product was updated."));
+    echo json_encode(array("message" => "Product was deleted."));
 }
   
-// if unable to update the product, tell the user
+// if unable to delete the product
 else{
   
     // set response code - 503 service unavailable
     http_response_code(503);
   
     // tell the user
-    echo json_encode(array("message" => "Unable to update product."));
+    echo json_encode(array("message" => "Unable to delete product."));
 }
 ?>

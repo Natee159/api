@@ -4,8 +4,8 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
   
 // include database and object files
-include_once '../../config/database.php';
-include_once '../../objects/product.php';
+include_once '../config/database.php';
+include_once '../objects/product.php';
   
 // instantiate database and product object
 $database = new Database();
@@ -13,12 +13,9 @@ $db = $database->getConnection();
   
 // initialize object
 $product = new Product($db);
-
-// set ID property of record to read
-$product->Product_id = isset($_GET['Product_id']) ? $_GET['Product_id'] : die();
-
+  
 // query products
-$stmt = $product->Detail();
+$stmt = $product->readorder();
 $num = $stmt->rowCount();
   
 // check if more than 0 record found
@@ -28,9 +25,6 @@ if($num>0){
     $products_arr=array();
     $products_arr["records"]=array();
   
-    // retrieve our table contents
-    // fetch() is faster than fetchAll()
-    // http://stackoverflow.com/questions/2770630/pdofetchall-vs-pdofetch-in-a-loop
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
         // extract row
         // this will make $row['name'] to
@@ -38,16 +32,14 @@ if($num>0){
         extract($row);
   
         $product_item=array(
-            "Product_id" => $Product_id,
-            "Product_name" => $Product_name,
-            "Author_name" => $Author_name,
-            "Publi_name" => $Publi_name,
-            "Detail" => $Detail,
-            "Image" => $Image,
+            "Order_Num" => $Order_Num,
+            "Date" => $Date,
+            "Time" => $Time,
             "Total" => $Total,
-            "Price" => $Price,
-            "Category_ID" => $Category_ID,
-            "Promotion_id" => $Promotion_id
+            "Amount" => $Amount,
+            "Shipment" => $Shipment,
+            "Status" => $Status,
+            "Customer_id" => $Customer_id
         );
   
         array_push($products_arr["records"], $product_item);

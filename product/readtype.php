@@ -4,8 +4,8 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
   
 // include database and object files
-include_once '../../config/database.php';
-include_once '../../objects/product.php';
+include_once '../config/database.php';
+include_once '../objects/product.php';
   
 // instantiate database and product object
 $database = new Database();
@@ -13,12 +13,9 @@ $db = $database->getConnection();
   
 // initialize object
 $product = new Product($db);
-
-// set ID property of record to read
-$product->Product_id = isset($_GET['Product_id']) ? $_GET['Product_id'] : die();
-
+  
 // query products
-$stmt = $product->Detail();
+$stmt = $product->readtype();
 $num = $stmt->rowCount();
   
 // check if more than 0 record found
@@ -38,16 +35,8 @@ if($num>0){
         extract($row);
   
         $product_item=array(
-            "Product_id" => $Product_id,
-            "Product_name" => $Product_name,
-            "Author_name" => $Author_name,
-            "Publi_name" => $Publi_name,
-            "Detail" => $Detail,
-            "Image" => $Image,
-            "Total" => $Total,
-            "Price" => $Price,
-            "Category_ID" => $Category_ID,
-            "Promotion_id" => $Promotion_id
+            "Type_ID" => $Type_ID,
+            "Type_Name" => $Type_Name
         );
   
         array_push($products_arr["records"], $product_item);

@@ -23,33 +23,21 @@ $data = json_decode(file_get_contents("php://input"));
 // make sure data is not empty
 if (
    
-    !empty($data->Product_name) &&
-    !empty($data->Author_name) &&
-    !empty($data->Publi_name) &&
-    !empty($data->Detail) &&
-    !empty($data->Image) &&
-    !empty($data->Total) &&
-    !empty($data->Price) &&
-    !empty($data->Category_ID) &&
-    !empty($data->Promotion_id)
-    
+    !empty($data->Promotion_Name) &&
+    !empty($data->Percent) &&
+    !empty($data->StartDate) &&
+    !empty($data->EndDate) 
 ) {
 
     // set product property values
    
-    $product->Product_name = $data->Product_name;
-    $product->Author_name = $data->Author_name;
-    $product->Publi_name = $data->Publi_name;
-    $product->Detail = $data->Detail;
-    $product->Image = $data->Image;
-    $product->Total = $data->Total;
-    $product->Price = $data->Price;
-    $product->Category_ID = $data->Category_ID;
-    $product->Promotion_id = $data->Promotion_id;
+    $product->Promotion_Name = $data->Promotion_Name;
+    $product->Percent = $data->Percent;
+    $product->StartDate = $data->StartDate;
+    $product->EndDate = $data->EndDate;
     
-
     // create the product
-    if ($product->create()) {
+    if ($product->insertpromotion()) {
 
         // set response code - 201 created
         http_response_code(201);

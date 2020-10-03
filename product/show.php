@@ -43,7 +43,6 @@ if($num>0){
             "Image" => $Image,
             "Total" => $Total,
             "Price" => $Price,
-            "Order_Num" => $Order_Num,
             "Category_ID" => $Category_ID,
             "Promotion_id" => $Promotion_id
         );
