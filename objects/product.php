@@ -235,27 +235,14 @@ class Product
         return $stmt;
     }
 
-    function search($keywords)
+    function search()
     {
-
         // select all query
-        $query = "SELECT * FROM  `product`  WHERE  Product_name LIKE '%" . $keywords . "%' ";
-
+        $query = "SELECT * FROM  `product`  WHERE " . $this->Type_search . " LIKE '%" . $this->Product_name . "%' ";
         // prepare query statement
         $stmt = $this->conn->prepare($query);
-
-        // sanitize
-        $keywords = htmlspecialchars(strip_tags($keywords));
-        $keywords = "%{$keywords}%";
-
-
-        // bind
-        $stmt->bindParam(1, $keywords);
-        $stmt->bindParam(2, $keywords);
-        $stmt->bindParam(3, $keywords);
         // execute query
         $stmt->execute();
-
         return $stmt;
     }
 

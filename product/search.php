@@ -15,9 +15,11 @@ $db = $database->getConnection();
 $product = new Product($db);
   
 // get keywords
-$keywords=isset($_GET["Product_name"]) ? $_GET["Product_name"] : "";
+$product->Type_search=isset($_GET["Type_search"]) ? $_GET["Type_search"] : die();
+$product->Product_name=isset($_GET["Product_name"]) ? $_GET["Product_name"] : die();
+
 // query products
-$stmt = $product->search($keywords);
+$stmt = $product->search();
 $num = $stmt->rowCount();
   
 // check if more than 0 record found
