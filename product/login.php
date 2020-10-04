@@ -36,7 +36,8 @@ if($num>0){
     // show products data in json format
     echo json_encode(
         array("Email" => $Email,
-              "Status" => true
+              "Status" => true,
+              "Customer_id" => $Customer_id
         )
     );
 }
