@@ -19,6 +19,8 @@ class Product
     public $Category_ID;
     public $Amount;
     public $Status;
+    public $Type_ID;
+    public $Typecat;
 
     // constructor with $db as database connection
     public function __construct($db)
@@ -149,6 +151,39 @@ class Product
             ON purchase_product.Order_Num = `order`.Order_Num ";
 
         // prepare query statement
+        $stmt = $this->conn->prepare($query);
+
+        // execute query
+        $stmt->execute();
+
+        return $stmt;
+    }
+    function selecttype()
+    {
+        $query ="SELECT allproduct.*,
+        promotion.Promotion_Name,
+        promotion.Percent,
+        promotion.StartDate,
+        promotion.EndDate
+        FROM
+        (
+            SELECT product.*,
+            typecate.Type_ID
+        FROM
+        (
+            SELECT category.*,
+            `type`.Type_Name
+            FROM category
+            INNER JOIN type
+            ON category.Type_ID = type.Type_ID
+         ) typecate
+         INNER JOIN product
+        ON typecate.Category_ID = product.Category_ID
+           ) allproduct
+            INNER JOIN promotion
+        ON allproduct.Promotion_id = promotion.Promotion_id
+        WHERE allproduct." . $this->Typecat . " ='" . $this->Type_ID . "' ";
+
         $stmt = $this->conn->prepare($query);
 
         // execute query
