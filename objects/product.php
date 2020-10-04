@@ -137,7 +137,7 @@ class Product
         purchase_product.Price, 
         `order`.Amount, 
         `order`.Total,
-        CASE WHEN purchase_product.Total > 0 THEN 'มีสินค้า' ELSE 'ไม่มีสินค้า' END AS 'status'
+        CASE WHEN purchase_product.Total > 0 THEN 'มีสินค้า' ELSE 'ไม่มีสินค้า' END AS 'Status'
         FROM
     (
         SELECT purchase.Order_Num,product.* 
