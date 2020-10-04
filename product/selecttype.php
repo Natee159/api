@@ -13,9 +13,9 @@ $db = $database->getConnection();
   
 // initialize object
 $product = new Product($db);
-
 $product->Type_ID = isset($_GET['Type_ID']) ? $_GET['Type_ID'] : die();
 $product->Typecat = isset($_GET['Typecat']) ? $_GET['Typecat'] : die();
+
 // query products
 $stmt = $product->selecttype();
 $num = $stmt->rowCount();

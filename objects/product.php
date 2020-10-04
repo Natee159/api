@@ -20,7 +20,6 @@ class Product
     public $Amount;
     public $Status;
     public $Type_ID;
-    public $Typecat;
 
     // constructor with $db as database connection
     public function __construct($db)
@@ -249,11 +248,11 @@ class Product
         $keywords = htmlspecialchars(strip_tags($keywords));
         $keywords = "%{$keywords}%";
 
+
         // bind
         $stmt->bindParam(1, $keywords);
         $stmt->bindParam(2, $keywords);
         $stmt->bindParam(3, $keywords);
-
         // execute query
         $stmt->execute();
 
