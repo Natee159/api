@@ -15,6 +15,7 @@ $db = $database->getConnection();
 $product = new Product($db);
   
 // query products
+$product->Customer_id=isset($_GET["Customer_id"]) ? $_GET["Customer_id"] : die();
 $stmt = $product->readpurchase();
 $num = $stmt->rowCount();
   
@@ -37,7 +38,8 @@ if($num>0){
             "Price" => $Price,
             "Amount" => $Amount,
             "Total" => $Total,
-            "Status" => $Status
+            "Status" => $Status,
+            "Customer_id" =>$Customer_id
         );
   
         array_push($products_arr["records"], $product_item);

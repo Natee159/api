@@ -138,7 +138,8 @@ class Product
         purchase_product.Price, 
         `order`.Amount, 
         `order`.Total,
-        CASE WHEN purchase_product.Total > 0 THEN 'มีสินค้า' ELSE 'ไม่มีสินค้า' END AS 'Status'
+        CASE WHEN purchase_product.Total > 0 THEN 'มีสินค้า' ELSE 'ไม่มีสินค้า' END AS 'Status',
+        `order`.Customer_id
         FROM
     (
         SELECT purchase.Order_Num,product.* 
@@ -147,7 +148,9 @@ class Product
         ON purchase.Product_id = product.Product_id
     ) purchase_product
             INNER JOIN `order`
-            ON purchase_product.Order_Num = `order`.Order_Num ";
+            ON purchase_product.Order_Num = `order`.Order_Num 
+            WHERE `order`.`Customer_id`='" . $this->Customer_id . "'";
+            
 
         // prepare query statement
         $stmt = $this->conn->prepare($query);
