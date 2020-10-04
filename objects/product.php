@@ -149,7 +149,7 @@ class Product
     ) purchase_product
             INNER JOIN `order`
             ON purchase_product.Order_Num = `order`.Order_Num 
-            WHERE `order`.`Customer_id`='" . $this->Customer_id . "'";
+            WHERE `order`.`Customer_id`='" . $this->Customer_id . "' AND `order`.`Status`='รอชำระเงิน'";
             
 
         // prepare query statement
@@ -591,22 +591,29 @@ class Product
         return false;
     }
 
-    function deleteorder()
+    function updateorder()
     {
 
-        // delete query
-        $query = "DELETE FROM `order` WHERE Order_Num = ?";
+        // update query
+        $query = "UPDATE
+                `order`
+            SET
+                Status=:Status
+            WHERE
+                Order_Num = :Order_Num";
 
-        // prepare query
+        // prepare query statement
         $stmt = $this->conn->prepare($query);
 
         // sanitize
+        $this->Status = htmlspecialchars(strip_tags($this->Status));
         $this->Order_Num = htmlspecialchars(strip_tags($this->Order_Num));
 
-        // bind id of record to delete
-        $stmt->bindParam(1, $this->Order_Num);
+        // bind new values
+        $stmt->bindParam(':Status', $this->Status);
+        $stmt->bindParam(':Order_Num', $this->Order_Num);
 
-        // execute query
+        // execute the query
         if ($stmt->execute()) {
             return true;
         }
