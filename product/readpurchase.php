@@ -39,7 +39,9 @@ if($num>0){
             "Amount" => $Amount,
             "Total" => $Total,
             "Status" => $Status,
-            "Customer_id" =>$Customer_id
+            "Customer_id" =>$Customer_id,
+            "Order_Num" =>$Order_Num,
+            "Totalproduct" =>$Totalproduct
         );
   
         array_push($products_arr["records"], $product_item);

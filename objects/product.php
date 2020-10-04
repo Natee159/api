@@ -136,10 +136,12 @@ class Product
         $query = " SELECT purchase_product.Product_id, 
         purchase_product.Product_name, 
         purchase_product.Price, 
+        purchase_product.Total AS 'Totalproduct', 
         `order`.Amount, 
         `order`.Total,
         CASE WHEN purchase_product.Total > 0 THEN 'มีสินค้า' ELSE 'ไม่มีสินค้า' END AS 'Status',
-        `order`.Customer_id
+        `order`.Customer_id,
+        `order`.Order_Num
         FROM
     (
         SELECT purchase.Order_Num,product.* 
@@ -148,7 +150,7 @@ class Product
         ON purchase.Product_id = product.Product_id
     ) purchase_product
             INNER JOIN `order`
-            ON purchase_product.Order_Num = `order`.Order_Num 
+            ON purchase_product.Order_Num = `order`.Order_Num
             WHERE `order`.`Customer_id`='" . $this->Customer_id . "' AND `order`.`Status`='รอชำระเงิน'";
             
 
@@ -612,6 +614,36 @@ class Product
         // bind new values
         $stmt->bindParam(':Status', $this->Status);
         $stmt->bindParam(':Order_Num', $this->Order_Num);
+
+        // execute the query
+        if ($stmt->execute()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    function updatetotal()
+    {
+
+        // update query
+        $query = "UPDATE
+                product
+            SET
+                Total=:Total
+            WHERE
+                Product_id = :Product_id";
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+
+        // sanitize
+        $this->Total = htmlspecialchars(strip_tags($this->Total));
+        $this->Product_id = htmlspecialchars(strip_tags($this->Product_id));
+
+        // bind new values
+        $stmt->bindParam(':Total', $this->Total);
+        $stmt->bindParam(':Product_id', $this->Product_id);
 
         // execute the query
         if ($stmt->execute()) {
