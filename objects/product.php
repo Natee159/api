@@ -327,7 +327,7 @@ class Product
         $query = "INSERT INTO
                 `order`
             SET
-            Date=:Date, Time=:Time, Total=:Total, Amount=:Amount, Shipment=:Shipment,Status=:Status";
+            Date=:Date, Time=:Time, Total=:Total, Amount=:Amount, Shipment=:Shipment,Status=:Status,Customer_id=:Customer_id";
 
         // prepare query
         $stmt = $this->conn->prepare($query);
@@ -340,6 +340,7 @@ class Product
         $this->Amount = htmlspecialchars(strip_tags($this->Amount));
         $this->Shipment = htmlspecialchars(strip_tags($this->Shipment));
         $this->Status = htmlspecialchars(strip_tags($this->Status));
+        $this->Customer_id = htmlspecialchars(strip_tags($this->Customer_id));
 
         // bind values
         // $stmt->bindParam(":Product_id", $this->Product_id);
@@ -349,6 +350,7 @@ class Product
         $stmt->bindParam(":Amount", $this->Amount);
         $stmt->bindParam(":Shipment", $this->Shipment);
         $stmt->bindParam(":Status", $this->Status);
+        $stmt->bindParam(":Customer_id", $this->Customer_id);
 
 
         // execute query
@@ -380,6 +382,34 @@ class Product
         // $stmt->bindParam(":Product_id", $this->Product_id);
         $stmt->bindParam(":Category_Name", $this->Category_Name);
         $stmt->bindParam(":Type_ID", $this->Type_ID);
+        // execute query
+        if ($stmt->execute()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    function insertpurchase()
+    {
+
+        // query to insert record
+        $query = "INSERT INTO
+                `purchase`
+            SET
+            Product_id=:Product_id";
+
+        // prepare query
+        $stmt = $this->conn->prepare($query);
+
+        // sanitize
+        // $this->Product_id=htmlspecialchars(strip_tags($this->Product_id));
+        $this->Product_id = htmlspecialchars(strip_tags($this->Product_id));
+
+
+        // bind values
+        // $stmt->bindParam(":Product_id", $this->Product_id);
+        $stmt->bindParam(":Product_id", $this->Product_id);
         // execute query
         if ($stmt->execute()) {
             return true;
@@ -462,39 +492,6 @@ class Product
         return false;
     }
 
-    function insertpurchase()
-    {
-
-        // query to insert record
-        $query = "INSERT INTO
-                `purchase`
-            SET
-            Product_id=:Product_id, Order_Num=:Order_Num";
-
-        // prepare query
-        $stmt = $this->conn->prepare($query);
-
-        // sanitize
-        // $this->Product_id=htmlspecialchars(strip_tags($this->Product_id));
-        $this->Product_id = htmlspecialchars(strip_tags($this->Product_id));
-        $this->Order_Num = htmlspecialchars(strip_tags($this->Order_Num));
-
-
-        // bind values
-        // $stmt->bindParam(":Product_id", $this->Product_id);
-        $stmt->bindParam(":Product_id", $this->Product_id);
-        $stmt->bindParam(":Order_Num", $this->Order_Num);
-
-
-
-
-        // execute query
-        if ($stmt->execute()) {
-            return true;
-        }
-
-        return false;
-    }
 
     function inserttype()
     {
