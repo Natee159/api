@@ -48,7 +48,8 @@ if($num>0){
             "Total" => $Total,
             "Price" => $Price,
             "Category_ID" => $Category_ID,
-            "Promotion_id" => $Promotion_id
+            "Promotion_id" => $Promotion_id,
+            "Percent" =>$Percent
         );
   
         array_push($products_arr["records"], $product_item);

@@ -20,7 +20,6 @@ class Product
     public $Amount;
     public $Status;
     public $Type_ID;
-
     // constructor with $db as database connection
     public function __construct($db)
     {
@@ -133,26 +132,43 @@ class Product
     {
 
         // select all query
-        $query = " SELECT purchase_product.Product_id, 
-        purchase_product.Product_name, 
-        purchase_product.Price, 
-        purchase_product.Total AS 'Totalproduct', 
-        `order`.Amount, 
-        `order`.Total,
-        CASE WHEN purchase_product.Total > 0 THEN 'มีสินค้า' ELSE 'ไม่มีสินค้า' END AS 'Status',
-        `order`.Customer_id,
-        `order`.Order_Num
+        $query = " SELECT
+        purchase_order.Product_id,
+        purchase_order.Product_name,
+        purchase_order.Price,
+        purchase_order.Total AS 'Totalproduct',
+        purchase_order.Amount,
+        purchase_order.Totalorder,
+        CASE WHEN purchase_order.Total > 0 THEN 'มีสินค้า' ELSE 'ไม่มีสินค้า'
+    END AS 'Status',
+    purchase_order.Customer_id,
+    purchase_order.Order_Num,
+    promotion.Percent
+    FROM
+        (
+        SELECT
+            purchase_product.*,
+            `order`.Date,
+            `order`.Time,
+            `order`.Total AS 'Totalorder',
+            `order`.Amount,
+            `order`.Shipment,
+            `order`.Status,
+            `order`.Customer_id
         FROM
-    (
-        SELECT purchase.Order_Num,product.* 
-        FROM purchase
-        INNER JOIN product
-        ON purchase.Product_id = product.Product_id
-    ) purchase_product
-            INNER JOIN `order`
-            ON purchase_product.Order_Num = `order`.Order_Num
-            WHERE `order`.`Customer_id`='" . $this->Customer_id . "' AND `order`.`Status`='รอชำระเงิน'";
-            
+            (
+            SELECT
+                purchase.Order_Num,
+                product.*
+            FROM
+                purchase
+            INNER JOIN product ON purchase.Product_id = product.Product_id
+        ) purchase_product
+            INNER JOIN `order` ON purchase_product.Order_Num = `order`.Order_Num
+        ) purchase_order
+            INNER JOIN promotion ON purchase_order.Promotion_id = promotion.Promotion_id
+            WHERE `purchase_order`.`Customer_id`='" . $this->Customer_id . "' AND `purchase_order`.`Status`='รอชำระเงิน'";
+
 
         // prepare query statement
         $stmt = $this->conn->prepare($query);
@@ -164,7 +180,7 @@ class Product
     }
     function selecttype()
     {
-        $query ="SELECT allproduct.*,
+        $query = "SELECT allproduct.*,
         promotion.Promotion_Name,
         promotion.Percent,
         promotion.StartDate,
@@ -200,7 +216,11 @@ class Product
     {
 
         // select all query
-        $query = " SELECT * FROM `product` LIMIT 4 ";
+        $query = " SELECT product.* ,
+        promotion.Percent AS 'Percent'
+                FROM product
+                INNER JOIN promotion
+                ON product.Promotion_id = promotion.Promotion_id LIMIT 4";
 
         // prepare query statement
         $stmt = $this->conn->prepare($query);
@@ -214,7 +234,13 @@ class Product
     {
 
         // select all query
-        $query = " SELECT * FROM `product` WHERE Product_id = '" . $this->Product_id . "' ";
+        $query = "SELECT product.* ,
+        promotion.Percent AS 'Percent'
+                FROM product
+                INNER JOIN promotion
+                ON product.Promotion_id = promotion.Promotion_id 
+                WHERE Product_id = '" . $this->Product_id . "' ";
+
 
         // prepare query statement
         $stmt = $this->conn->prepare($query);
@@ -243,7 +269,12 @@ class Product
     function search()
     {
         // select all query
-        $query = "SELECT * FROM  `product`  WHERE " . $this->Type_search . " LIKE '%" . $this->Product_name . "%' ";
+        $query = "SELECT product.*,
+        promotion.Percent
+        FROM product
+        INNER JOIN promotion
+        ON product.Promotion_id=promotion.Promotion_id
+        WHERE " . $this->Type_search . " LIKE '%" . $this->Product_name . "%' ";
         // prepare query statement
         $stmt = $this->conn->prepare($query);
         // execute query
@@ -251,29 +282,6 @@ class Product
         return $stmt;
     }
 
-    function searchauthor($keywords)
-    {
-
-        // select all query
-        $query = "SELECT * FROM  `product`  WHERE  Author_name LIKE '%" . $keywords . "%' ";
- 
-        // prepare query statement
-        $stmt = $this->conn->prepare($query);
-
-        // sanitize
-        $keywords = htmlspecialchars(strip_tags($keywords));
-        $keywords = "%{$keywords}%";
-
-        // bind
-        $stmt->bindParam(1, $keywords);
-        $stmt->bindParam(2, $keywords);
-        $stmt->bindParam(3, $keywords);
-
-        // execute query
-        $stmt->execute();
-
-        return $stmt;
-    }
 
     // create product
     function create()
@@ -613,6 +621,38 @@ class Product
 
         // bind new values
         $stmt->bindParam(':Status', $this->Status);
+        $stmt->bindParam(':Order_Num', $this->Order_Num);
+
+        // execute the query
+        if ($stmt->execute()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    function updatenum()
+    {
+
+        // update query
+        $query = "UPDATE
+                `order`
+            SET
+                Total=:Total,Amount=:Amount
+            WHERE
+                Order_Num = :Order_Num";
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+
+        // sanitize
+        $this->Total = htmlspecialchars(strip_tags($this->Total));
+        $this->Amount = htmlspecialchars(strip_tags($this->Amount));
+        $this->Order_Num = htmlspecialchars(strip_tags($this->Order_Num));
+
+        // bind new values
+        $stmt->bindParam(':Total', $this->Total);
+        $stmt->bindParam(':Amount', $this->Amount);
         $stmt->bindParam(':Order_Num', $this->Order_Num);
 
         // execute the query
