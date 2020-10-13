@@ -7,7 +7,6 @@ class Product
     private $table_name = "product";
 
     // object properties
-
     public $Product_id;
     public $Product_name;
     public $Author_name;
@@ -27,6 +26,22 @@ class Product
     }
 
     // read products
+    function graph()
+    {
+        $yesturday = date('Y-m-d', strtotime("-7 days"));
+        // select all query
+        $query = " SELECT Total,`Date`
+
+        FROM `order` WHERE `Date` >='" . $yesturday . "' ";
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+
+        // execute query
+        $stmt->execute();
+
+        return $stmt;
+    }
     function read()
     {
 
@@ -79,7 +94,7 @@ class Product
         INNER JOIN customer
         ON comment.Customer_id = customer.Customer_id
         WHERE Product_id = '" . $this->Product_id . "' ";
-                
+
         // prepare query statement
         $stmt = $this->conn->prepare($query);
 
@@ -209,6 +224,99 @@ class Product
         ON allproduct.Promotion_id = promotion.Promotion_id
         WHERE allproduct." . $this->Typecat . " ='" . $this->Type_ID . "' ";
 
+        $stmt = $this->conn->prepare($query);
+
+        // execute query
+        $stmt->execute();
+
+        return $stmt;
+    }
+    function shownew()
+    {
+
+        // select all query
+        $query = " SELECT product.* ,
+        promotion.Percent AS 'Percent'
+                FROM product
+                INNER JOIN promotion
+                ON product.Promotion_id = promotion.Promotion_id 
+                ORDER BY product.Product_id  DESC LIMIT 4";
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+
+        // execute query
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    function showrate()
+    {
+
+        // select all query
+        $query = " SELECT product_promotion.*,
+        SUM(product_promotion.Score) AS  Sum_Score
+        FROM
+        (SELECT product_comment.*,
+        promotion.Percent
+        FROM
+        (SELECT
+                product.Product_id,
+                product.Product_name,
+                product.Image,
+                product.Price,
+                product.Promotion_id,
+                comment.Score
+            FROM
+                product
+            INNER JOIN comment ON product.product_id = comment.Product_id) product_comment
+            INNER JOIN promotion ON product_comment.Promotion_id = promotion.Promotion_id) product_promotion
+            GROUP BY product_promotion.Product_id
+            ORDER BY Sum_Score DESC LIMIT 4";
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+
+        // execute query
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    function showsale()
+    {
+
+        // select all query
+        $query = " SELECT Order_promotion.*,
+        SUM(Order_promotion.Amount) AS  Sum_Amount
+        FROM
+        (SELECT Order_product.*,
+        promotion.Percent
+        FROM
+        (SELECT
+        Order_purchase.*,
+        product.Product_name,
+        product.Image,
+        product.Price,
+        product.Promotion_id
+        FROM
+            (
+            SELECT
+                `order`.Order_Num,
+                `order`.Amount,
+                `order`.Status,
+                purchase.Product_id
+            FROM
+                purchase
+            INNER JOIN (SELECT * FROM `order` WHERE Status ='ชำระเงินแล้ว') `order` ON purchase.Order_Num = `order`.Order_Num
+        ) Order_purchase
+        INNER JOIN product ON Order_purchase.product_id = product.Product_id) Order_product
+        INNER JOIN promotion ON Order_product.promotion_id = promotion.Promotion_id) Order_promotion
+        GROUP BY Order_promotion.Product_id
+        ORDER BY Sum_Amount DESC LIMIT 4";
+
+        // prepare query statement
         $stmt = $this->conn->prepare($query);
 
         // execute query
