@@ -15,8 +15,7 @@ $db = $database->getConnection();
 $product = new Product($db);
   
 // query products
-$product->Product_id=isset($_GET["Product_id"]) ? $_GET["Product_id"] : die();
-$stmt = $product->readcomment();
+$stmt = $product->showallbook();
 $num = $stmt->rowCount();
   
 // check if more than 0 record found
@@ -36,13 +35,17 @@ if($num>0){
         extract($row);
   
         $product_item=array(
-            "Comment_ID" => $Comment_ID,
-            "Score" => $Score,
-            "Date" => $Date,
-            "Comment" => $Comment,
-            "Customer_id" => $Customer_id,
             "Product_id" => $Product_id,
-            "Email" =>$Email
+            "Product_name" => $Product_name,
+            "Author_name" => $Author_name,
+            "Publi_name" => $Publi_name,
+            "Detail" => $Detail,
+            "Image" => $Image,
+            "Total" => $Total,
+            "Price" => $Price,
+            "Category_ID" => $Category_ID,
+            "Promotion_id" => $Promotion_id,
+            "Percent" => $Percent
         );
   
         array_push($products_arr["records"], $product_item);

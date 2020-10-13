@@ -73,8 +73,13 @@ class Product
     {
 
         // select all query
-        $query = " SELECT * FROM `comment` ";
-
+        $query = " SELECT comment.* ,
+        customer.Email
+        FROM  comment
+        INNER JOIN customer
+        ON comment.Customer_id = customer.Customer_id
+        WHERE Product_id = '" . $this->Product_id . "' ";
+                
         // prepare query statement
         $stmt = $this->conn->prepare($query);
 
@@ -221,6 +226,24 @@ class Product
                 FROM product
                 INNER JOIN promotion
                 ON product.Promotion_id = promotion.Promotion_id LIMIT 4";
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+
+        // execute query
+        $stmt->execute();
+
+        return $stmt;
+    }
+    function showallbook()
+    {
+
+        // select all query
+        $query = " SELECT product.* ,
+        promotion.Percent AS 'Percent'
+                FROM product
+                INNER JOIN promotion
+                ON product.Promotion_id = promotion.Promotion_id ";
 
         // prepare query statement
         $stmt = $this->conn->prepare($query);
