@@ -972,4 +972,53 @@ class Product
 
         return false;
     }
+
+    function updatedata()
+    {
+
+        // update query
+        $query = "UPDATE
+                `customer`
+            SET
+                Firstname = :Firstname,
+                Lastname = :Lastname,
+                Gender = :Gender,
+                Date_birth = :Date_birth,
+                Phone_num = :Phone_num,
+                Address = :Address,
+                Email = :Email
+            WHERE
+                Customer_id = :Customer_id";
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+
+        // sanitize
+        $this->Firstname = htmlspecialchars(strip_tags($this->Firstname));
+        $this->Lastname = htmlspecialchars(strip_tags($this->Lastname));
+        $this->Gender = htmlspecialchars(strip_tags($this->Gender));
+        $this->Date_birth = htmlspecialchars(strip_tags($this->Date_birth));
+        $this->Phone_num = htmlspecialchars(strip_tags($this->Phone_num));
+        $this->Address = htmlspecialchars(strip_tags($this->Address));
+        $this->Email = htmlspecialchars(strip_tags($this->Email));
+        $this->Customer_id = htmlspecialchars(strip_tags($this->Customer_id));
+
+        // bind new values
+        $stmt->bindParam(':Firstname', $this->Firstname);
+        $stmt->bindParam(':Lastname', $this->Lastname);
+        $stmt->bindParam(':Gender', $this->Gender);
+        $stmt->bindParam(':Date_birth', $this->Date_birth);
+        $stmt->bindParam(':Phone_num', $this->Phone_num);
+        $stmt->bindParam(':Address', $this->Address);
+        $stmt->bindParam(':Email', $this->Email);
+
+        $stmt->bindParam(':Customer_id', $this->Customer_id);
+
+        // execute the query
+        if ($stmt->execute()) {
+            return true;
+        }
+
+        return false;
+    }
 }
