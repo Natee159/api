@@ -19,6 +19,7 @@ class Product
     public $Amount;
     public $Status;
     public $Type_ID;
+    public $Promotion_Name;
     // constructor with $db as database connection
     public function __construct($db)
     {
@@ -981,6 +982,47 @@ class Product
         $stmt->bindParam(':Promotion_id', $this->Promotion_id);
 
         $stmt->bindParam(':Product_id', $this->Product_id);
+
+        // execute the query
+        if ($stmt->execute()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    function updatepromotion()
+    {
+
+        // update query
+        $query = "UPDATE
+                promotion
+            SET
+                Promotion_Name	= :Promotion_Name,
+                Percent = :Percent,
+                StartDate = :StartDate,
+                EndDate = :EndDate,
+            WHERE
+                Promotion_id = :Promotion_id";
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+
+        // sanitize
+        $this->Promotion_Name= htmlspecialchars(strip_tags($this->Promotion_Name));
+        $this->Percent = htmlspecialchars(strip_tags($this->Percent));
+        $this->StartDate = htmlspecialchars(strip_tags($this->StartDate));
+        $this->EndDate = htmlspecialchars(strip_tags($this->EndDate));
+
+        $this->Promotion_id = htmlspecialchars(strip_tags($this->Promotion_id));
+
+        // bind new values
+        $stmt->bindParam(':Promotion_Name', $this->Promotion_Name);
+        $stmt->bindParam(':Percent', $this->Percent);
+        $stmt->bindParam(':StartDate', $this->StartDate);
+        $stmt->bindParam(':EndDate', $this->EndDate);
+
+        $stmt->bindParam(':Promotion_id', $this->Promotion_id);
 
         // execute the query
         if ($stmt->execute()) {
