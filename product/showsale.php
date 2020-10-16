@@ -39,6 +39,7 @@ if($num>0){
             "Product_name" => $Product_name,
             "Image" => $Image,
             "Price" => $Price,
+            "Total" => $Total,
             "Promotion_id" => $Promotion_id,
             "Percent" => $Percent
         );

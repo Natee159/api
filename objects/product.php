@@ -265,6 +265,7 @@ class Product
                 product.Product_id,
                 product.Product_name,
                 product.Image,
+                product.Total,
                 product.Price,
                 product.Promotion_id,
                 comment.Score
@@ -299,6 +300,7 @@ class Product
         product.Product_name,
         product.Image,
         product.Price,
+        product.Total,
         product.Promotion_id
         FROM
             (
@@ -383,6 +385,21 @@ class Product
     }
 
     function login()
+    {
+
+        // select one query
+        $query = " SELECT * FROM `customer` WHERE Email = '" . $this->Email . "' AND Password = '" . $this->Password . "' ";
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+
+        // execute query
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    function loginadmin()
     {
 
         // select one query

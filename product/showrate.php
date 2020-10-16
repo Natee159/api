@@ -38,6 +38,7 @@ if($num>0){
             "Product_id" => $Product_id,
             "Product_name" => $Product_name,
             "Image" => $Image,
+            "Total" => $Total,
             "Price" => $Price,
             "Promotion_id" => $Promotion_id,
             "Score"=> $Score,
