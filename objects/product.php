@@ -209,7 +209,6 @@ class Product
         purchase_order.Total AS 'Totalproduct',
         purchase_order.Amount,
         purchase_order.Totalorder,
-        
     purchase_order.Customer_id,
     purchase_order.Order_Num,
     promotion.Percent
@@ -236,7 +235,7 @@ class Product
             INNER JOIN `order` ON purchase_product.Order_Num = `order`.Order_Num
         ) purchase_order
             INNER JOIN promotion ON purchase_order.Promotion_id = promotion.Promotion_id
-            WHERE `purchase_order`.`Customer_id`='" . $this->Customer_id . "' AND `purchase_order`.`Status`='ชำระเงินเเล้ว'";
+            WHERE `purchase_order`.`Customer_id`='" . $this->Customer_id . "' AND `purchase_order`.`Status`='ชำระเงินแล้ว'";
 
 
         // prepare query statement

@@ -37,12 +37,11 @@ if($num>0){
             "Product_name" => $Product_name,
             "Price" => $Price,
             "Amount" => $Amount,
-            "Totalorder" => $Totalorder,
-            
+            "Totalorder" => $Totalorder,       
             "Customer_id" =>$Customer_id,
             "Order_Num" =>$Order_Num,
             "Totalproduct" =>$Totalproduct,
-            "Percent" =>$Percent,
+            "Percent" =>$Percent
         );
   
         array_push($products_arr["records"], $product_item);
