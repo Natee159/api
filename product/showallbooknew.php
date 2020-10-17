@@ -15,7 +15,7 @@ $db = $database->getConnection();
 $product = new Product($db);
   
 // query products
-$stmt = $product->showallbook();
+$stmt = $product->showallbooknew();
 $num = $stmt->rowCount();
   
 // check if more than 0 record found
@@ -45,7 +45,8 @@ if($num>0){
             "Price" => $Price,
             "Category_ID" => $Category_ID,
             "Promotion_id" => $Promotion_id,
-            "Percent" => $Percent
+            "Percent" => $Percent,
+            "Promotion_Name" => $Promotion_Name
         );
   
         array_push($products_arr["records"], $product_item);

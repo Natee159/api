@@ -15,7 +15,7 @@ $db = $database->getConnection();
 $product = new Product($db);
   
 // query products
-$stmt = $product->showrate();
+$stmt = $product->showallbooksale();
 $num = $stmt->rowCount();
   
 // check if more than 0 record found
@@ -38,10 +38,9 @@ if($num>0){
             "Product_id" => $Product_id,
             "Product_name" => $Product_name,
             "Image" => $Image,
-            "Total" => $Total,
             "Price" => $Price,
+            "Total" => $Total,
             "Promotion_id" => $Promotion_id,
-            "Score"=> $Score,
             "Percent" => $Percent,
             "Promotion_Name" => $Promotion_Name
         );

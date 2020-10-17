@@ -19,7 +19,6 @@ class Product
     public $Amount;
     public $Status;
     public $Type_ID;
-    public $Promotion_Name;
     // constructor with $db as database connection
     public function __construct($db)
     {
@@ -237,11 +236,33 @@ class Product
 
         // select all query
         $query = " SELECT product.* ,
-        promotion.Percent AS 'Percent'
+        promotion.Percent AS 'Percent',
+        promotion.Promotion_Name AS 'Promotion_Name'
                 FROM product
                 INNER JOIN promotion
                 ON product.Promotion_id = promotion.Promotion_id 
                 ORDER BY product.Product_id  DESC LIMIT 4";
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+
+        // execute query
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    function showallbooknew()
+    {
+
+        // select all query
+        $query = " SELECT product.* ,
+        promotion.Percent AS 'Percent',
+        promotion.Promotion_Name AS 'Promotion_Name'
+                FROM product
+                INNER JOIN promotion
+                ON product.Promotion_id = promotion.Promotion_id 
+                ORDER BY product.Product_id  DESC ";
 
         // prepare query statement
         $stmt = $this->conn->prepare($query);
@@ -260,7 +281,8 @@ class Product
         SUM(product_promotion.Score) AS  Sum_Score
         FROM
         (SELECT product_comment.*,
-        promotion.Percent
+        promotion.Percent,
+        promotion.Promotion_Name
         FROM
         (SELECT
                 product.Product_id,
@@ -286,6 +308,41 @@ class Product
         return $stmt;
     }
 
+    function showallbookrate()
+    {
+
+        // select all query
+        $query = " SELECT product_promotion.*,
+        SUM(product_promotion.Score) AS  Sum_Score
+        FROM
+        (SELECT product_comment.*,
+        promotion.Percent,
+        promotion.Promotion_Name
+        FROM
+        (SELECT
+                product.Product_id,
+                product.Product_name,
+                product.Image,
+                product.Total,
+                product.Price,
+                product.Promotion_id,
+                comment.Score
+            FROM
+                product
+            INNER JOIN comment ON product.product_id = comment.Product_id) product_comment
+            INNER JOIN promotion ON product_comment.Promotion_id = promotion.Promotion_id) product_promotion
+            GROUP BY product_promotion.Product_id
+            ORDER BY Sum_Score DESC ";
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+
+        // execute query
+        $stmt->execute();
+
+        return $stmt;
+    }
+
     function showsale()
     {
 
@@ -294,7 +351,8 @@ class Product
         SUM(Order_promotion.Amount) AS  Sum_Amount
         FROM
         (SELECT Order_product.*,
-        promotion.Percent
+        promotion.Percent,
+        promotion.Promotion_Name
         FROM
         (SELECT
         Order_purchase.*,
@@ -318,6 +376,49 @@ class Product
         INNER JOIN promotion ON Order_product.promotion_id = promotion.Promotion_id) Order_promotion
         GROUP BY Order_promotion.Product_id
         ORDER BY Sum_Amount DESC LIMIT 4";
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+
+        // execute query
+        $stmt->execute();
+
+        return $stmt;
+    }
+
+    function showallbooksale()
+    {
+
+        // select all query
+        $query = " SELECT Order_promotion.*,
+        SUM(Order_promotion.Amount) AS  Sum_Amount
+        FROM
+        (SELECT Order_product.*,
+        promotion.Percent,
+        promotion.Promotion_Name
+        FROM
+        (SELECT
+        Order_purchase.*,
+        product.Product_name,
+        product.Image,
+        product.Price,
+        product.Total,
+        product.Promotion_id
+        FROM
+            (
+            SELECT
+                `order`.Order_Num,
+                `order`.Amount,
+                `order`.Status,
+                purchase.Product_id
+            FROM
+                purchase
+            INNER JOIN (SELECT * FROM `order` WHERE Status ='ชำระเงินแล้ว') `order` ON purchase.Order_Num = `order`.Order_Num
+        ) Order_purchase
+        INNER JOIN product ON Order_purchase.product_id = product.Product_id) Order_product
+        INNER JOIN promotion ON Order_product.promotion_id = promotion.Promotion_id) Order_promotion
+        GROUP BY Order_promotion.Product_id
+        ORDER BY Sum_Amount DESC ";
 
         // prepare query statement
         $stmt = $this->conn->prepare($query);
@@ -369,7 +470,8 @@ class Product
 
         // select all query
         $query = "SELECT product.* ,
-        promotion.Percent AS 'Percent'
+        promotion.Percent AS 'Percent',
+        promotion.Promotion_Name AS 'Promotion_Name'
                 FROM product
                 INNER JOIN promotion
                 ON product.Promotion_id = promotion.Promotion_id 
@@ -996,12 +1098,12 @@ class Product
 
         // update query
         $query = "UPDATE
-                promotion
+                `promotion`
             SET
                 Promotion_Name	= :Promotion_Name,
                 Percent = :Percent,
                 StartDate = :StartDate,
-                EndDate = :EndDate,
+                EndDate = :EndDate
             WHERE
                 Promotion_id = :Promotion_id";
 
