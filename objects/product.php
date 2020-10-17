@@ -198,6 +198,55 @@ class Product
 
         return $stmt;
     }
+    function showhistory()
+    {
+
+        // select all query
+        $query = " SELECT
+        purchase_order.Product_id,
+        purchase_order.Product_name,
+        purchase_order.Price,
+        purchase_order.Total AS 'Totalproduct',
+        purchase_order.Amount,
+        purchase_order.Totalorder,
+        
+    purchase_order.Customer_id,
+    purchase_order.Order_Num,
+    promotion.Percent
+    FROM
+        (
+        SELECT
+            purchase_product.*,
+            `order`.Date,
+            `order`.Time,
+            `order`.Total AS 'Totalorder',
+            `order`.Amount,
+            `order`.Shipment,
+            `order`.Status,
+            `order`.Customer_id
+        FROM
+            (
+            SELECT
+                purchase.Order_Num,
+                product.*
+            FROM
+                purchase
+            INNER JOIN product ON purchase.Product_id = product.Product_id
+        ) purchase_product
+            INNER JOIN `order` ON purchase_product.Order_Num = `order`.Order_Num
+        ) purchase_order
+            INNER JOIN promotion ON purchase_order.Promotion_id = promotion.Promotion_id
+            WHERE `purchase_order`.`Customer_id`='" . $this->Customer_id . "' AND `purchase_order`.`Status`='ชำระเงินเเล้ว'";
+
+
+        // prepare query statement
+        $stmt = $this->conn->prepare($query);
+
+        // execute query
+        $stmt->execute();
+
+        return $stmt;
+    }
     function selecttype()
     {
         $query = "SELECT allproduct.*,
