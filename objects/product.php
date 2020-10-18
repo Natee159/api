@@ -371,6 +371,7 @@ class Product
         (SELECT
                 product.Product_id,
                 product.Product_name,
+                product.Author_name,
                 product.Image,
                 product.Total,
                 product.Price,
@@ -450,6 +451,7 @@ class Product
         (SELECT
         Order_purchase.*,
         product.Product_name,
+        product.Author_name,
         product.Image,
         product.Price,
         product.Total,

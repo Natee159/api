@@ -37,6 +37,7 @@ if($num>0){
         $product_item=array(
             "Product_id" => $Product_id,
             "Product_name" => $Product_name,
+            "Author_name" => $Author_name,
             "Image" => $Image,
             "Price" => $Price,
             "Total" => $Total,
