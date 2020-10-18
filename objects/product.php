@@ -339,6 +339,7 @@ class Product
                 product.Total,
                 product.Price,
                 product.Promotion_id,
+                
                 comment.Score
             FROM
                 product
@@ -374,6 +375,7 @@ class Product
                 product.Total,
                 product.Price,
                 product.Promotion_id,
+                product.Detail,
                 comment.Score
             FROM
                 product
@@ -451,7 +453,8 @@ class Product
         product.Image,
         product.Price,
         product.Total,
-        product.Promotion_id
+        product.Promotion_id,
+        product.Detail
         FROM
             (
             SELECT
